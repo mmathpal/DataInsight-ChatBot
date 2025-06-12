@@ -9,28 +9,73 @@ load_dotenv()
 # Get the API URL from environment variables
 API_URL = os.getenv("CHATBOT_API_URL")
 
-st.set_page_config(page_title="Collateral-Insight Bot", page_icon="🏦")
+st.set_page_config(page_title="Collateral-Insight", page_icon="🏦")
 
-st.title("🏦 Collateral-Insight Bot")
-st.markdown("Ask me anything about collateral!")
+st.markdown(
+    '''
+    <style>
+    .main {
+        background-color: #f4f4f4;
+    }
+    .stChatMessage {
+        font-size: 16px;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+    .stChatMessage.user {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        text-align: right;
+    }
+    .stChatMessage.assistant {
+        background-color: #f8d7da;
+        color: #721c24;
+        text-align: left;
+    }
+    </style>
+    ''',
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    "<h1 style='text-align: center; color: #003366;'>🏦 Collateral-Insight</h1>",
+    unsafe_allow_html=True
+)
+st.markdown(
+    "<p style='text-align: center; font-size: 18px; color: #555;'>Instant insights on collateral data.</p>",
+    unsafe_allow_html=True
+)
 
 # Initialize chat history in session state
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 # Display chat history
+st.markdown("---")
 for chat in st.session_state.chat_history:
-    with st.chat_message("user", avatar="🧑‍💻"):
-        st.markdown(chat['question'])
-    with st.chat_message("assistant", avatar="🤖"):
-        st.markdown(chat['answer'])
+    st.markdown(
+        f"""
+        <div style='display: flex; flex-direction: column; gap: 0.5rem;'>
+            <div class='stChatMessage user' style='align-self: flex-end;'>🧑‍💻 {chat['question']}</div>
+            <div class='stChatMessage assistant' style='align-self: flex-start;'>🤖 {chat['answer']}</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # Chat input at the bottom
 question = st.chat_input("Type your question here...")
 
 if question:
-    with st.chat_message("user", avatar="🧑‍💻"):
-        st.markdown(question)
+    st.markdown(
+        f"""
+        <div style='display: flex; flex-direction: column; gap: 0.5rem;'>
+            <div class='stChatMessage user' style='align-self: flex-end;'>🧑‍💻 {question}</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     with st.spinner("Thinking..."):
         try:
@@ -42,8 +87,14 @@ if question:
                 answer = data.get("answer", "No answer")
                 st.session_state.chat_history.append({"question": question, "answer": answer})
 
-                with st.chat_message("assistant", avatar="🤖"):
-                    st.markdown(answer)
+                st.markdown(
+                    f"""
+                    <div style='display: flex; flex-direction: column; gap: 0.5rem;'>
+                        <div class='stChatMessage assistant' style='align-self: flex-start;'>🤖 {answer}</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
             else:
                 st.error(f"Error {response.status_code}: {response.text}")
 
