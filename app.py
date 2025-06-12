@@ -23,7 +23,7 @@ with st.sidebar:
             <ul>
                 <li>Natural language search on historical collateral activity</li>
                 <li>Quick access to margin call data and trends</li>
-                <li>Automated summaries for threshold breaches and market movements</li>
+                <li>Automated summaries for threshold breaches and collateral movements</li>
             </ul>
             Use it to streamline your exposure reviews and gain critical insights within seconds.
         </div>
