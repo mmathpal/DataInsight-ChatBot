@@ -2,17 +2,33 @@ import streamlit as st
 import requests
 from dotenv import load_dotenv
 import os
+import json
+from streamlit_lottie import st_lottie
+from datetime import datetime
 
 # Load .env
 load_dotenv()
 
 st.set_page_config(page_title="Collateral-Insight", page_icon="🏦")
 
+
 # Get the API URL from environment variables
 API_URL = os.getenv("CHATBOT_API_URL")
 
+@st.cache_data
+def load_lottie_url():
+    url = "https://assets5.lottiefiles.com/packages/lf20_49rdyysj.json"
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
+
+lottie_animation = load_lottie_url()
+
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/1087/1087815.png", width=160)
+    if lottie_animation:
+        st_lottie(lottie_animation, height=180, speed=0.5)
+
     st.markdown("### About", unsafe_allow_html=True)
     st.markdown(
         """
@@ -26,10 +42,13 @@ with st.sidebar:
                 <li>Automated summaries for threshold breaches and collateral movements</li>
             </ul>
             Use it to streamline your exposure reviews and gain critical insights within seconds.
+            <br><br>
         </div>
         """,
         unsafe_allow_html=True
     )
+    st.markdown("💡 Try asking: *What is the collateral balance for ClientB in June?*", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center; font-size: 13px; color: gray;'>© 2025 | Collateral Insight Bot</div>", unsafe_allow_html=True)
 
 st.markdown(
     '''
@@ -38,10 +57,24 @@ st.markdown(
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background: linear-gradient(to bottom right, #f0f4ff, #dfefff);
     }
+    body::before {
+        content: "";
+        background-image: url("https://www.transparenttextures.com/patterns/diamond-upholstery.png");
+        opacity: 0.04;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        z-index: -1;
+    }
     .main {
         background-color: transparent;
     }
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
     .stChatMessage {
+        animation: fadeIn 0.5s ease-in-out;
         font-size: 16px;
         padding: 12px 20px;
         border-radius: 15px;
@@ -72,13 +105,13 @@ st.markdown(
         left: 0;
         width: 100%;
         z-index: 1000;
-        background: linear-gradient(to right, #004aad, #00c2cb);
+        background: linear-gradient(to right, #0052cc, #00b8d9);
         padding: 30px 0 0 0;
-        border-bottom: none;
         display: flex;
         flex-direction: column;
         justify-content: center;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        text-shadow: 1px 1px 2px #00000066;
     }
     .fixed-footer {
         position: fixed;
@@ -122,7 +155,6 @@ for chat in st.session_state.chat_history:
         unsafe_allow_html=True
     )
 
-st.markdown("<div class='fixed-footer'></div>", unsafe_allow_html=True)
 question = st.chat_input("e.g. What is the margin call for Client A on Jan 2025?")
 
 if question:
@@ -145,6 +177,7 @@ if question:
                 answer = data.get("answer", "No answer")
                 st.session_state.chat_history.append({"question": question, "answer": answer})
 
+                # Future enhancement: support rendering markdown tables or images
                 st.markdown(
                     f"""
                     <div style='display: flex; flex-direction: column; gap: 0.5rem;'>
