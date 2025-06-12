@@ -57,14 +57,17 @@ def main():
     for idx, row in df.iterrows():
         # Text used for embedding generation
         text = (
-            f"CalculationDate: {row['CalculationDate']}, Client: {row['Client']}, MTM: {row['MTM']}, "
-            f"CollateralBalance: {row['CollateralBalance']}, HeldNominal: {row['HeldNominal']}, "
-            f"TotalCollateralMartketValue: {row['TotalCollateralMartketValue']}, ISIN: {row['ISIN']}, "
+            f"CalculationDate: {row['CalculationDate']}, Client: {row['Client']}, MTM: {row['MTM']:.2f}, "
+            f"CollateralBalance: {row['CollateralBalance']:.2f}, HeldNominal: {row['HeldNominal']:.2f}, "
+            f"TotalCollateralMartketValue: {row['TotalCollateralMartketValue']:.2f}, ISIN: {row['ISIN']}, "
             f"AssetName: {row['AssetName']}, Price: {row['Price']}, Haricut: {row['Haricut']}, "
             f"CounterpartyName: {row['CounterpartyName']}, PrincipalName: {row['PrincipalName']}, "
             f"Threshold: {row['Threshold']}, Volatility: {row['Volatility']}, Currency: {row['Currency']}, "
             f"InterestRate: {row['InterestRate']}, FxRate: {row['FxRate']}, MTA: {row['MTA']}, "
-            f"MarginCallAmount: {row['MarginCallAmount']}"
+            f"MarginCallAmount: {row['MarginCallAmount']:.2f}, "
+            f"CountryOfOrigin: {row['CountryOfOrigin']}, Sector: {row['Sector']}, "
+            f"ClientResponseTime: {row['ClientResponseTime']}, PaymentAmountDirection: {row['PaymentAmountDirection']}, "
+            f"MarginCallMade: {row['MarginCallMade']}"
         )
         embedding = get_embedding(text)
         if embedding:
