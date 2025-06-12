@@ -5,6 +5,8 @@ import os
 import json
 from streamlit_lottie import st_lottie
 from datetime import datetime
+import pandas as pd
+import ast
 
 # Load .env
 load_dotenv()
@@ -22,6 +24,7 @@ def load_lottie_url():
     if r.status_code != 200:
         return None
     return r.json()
+
 
 lottie_animation = load_lottie_url()
 
@@ -177,7 +180,6 @@ if question:
                 answer = data.get("answer", "No answer")
                 st.session_state.chat_history.append({"question": question, "answer": answer})
 
-                # Future enhancement: support rendering markdown tables or images
                 st.markdown(
                     f"""
                     <div style='display: flex; flex-direction: column; gap: 0.5rem;'>
@@ -186,6 +188,8 @@ if question:
                     """,
                     unsafe_allow_html=True
                 )
+
+
             else:
                 st.error(f"Error {response.status_code}: {response.text}")
 
